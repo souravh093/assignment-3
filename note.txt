@@ -1,0 +1,2 @@
+Route: /api/users/me (PUT)  {not understand what is the mean me}
+Request Headers: Authorization: Bearer jwt_token {authorization how to do if check the email are same to the logged user email}

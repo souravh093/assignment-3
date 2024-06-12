@@ -36,12 +36,4 @@ const bikeSchema = new Schema<TBike>({
   },
 });
 
-// delete version from response
-bikeSchema.methods.toJSON = function () {
-  const bike = this.toObject();
-  delete bike.__v;
-
-  return bike;
-};
-
 export const Bike = model<TBike>('Bike', bikeSchema);

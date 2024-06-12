@@ -2,33 +2,58 @@ import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { UserServices } from './user.service';
+import AppError from '../../errors/AppError';
 
-// create user controller
-const createUser = catchAsync(async (req, res) => {
-  const result = await UserServices.createUserIntoDB(req.body);
+// get user profile controller
+const getUserProfile = catchAsync(async (req, res) => {
+  // get logged user
+  const loggedUser = req.user;
 
-  sendResponse(res, {
-    success: true,
-    statusCode: httpStatus.CREATED,
-    message: 'User registered successfully',
-    data: result,
-  });
-});
+  const result = await UserServices.getUserProfileFromDB(req.params.email);
 
-// login user controller
-const loginUser = catchAsync(async (req, res) => {
-  const result = await UserServices.loginUser(req.body);
+  // check if not matched logged in user email then throw error
+  if (loggedUser?.email !== result?.email) {
+    throw new AppError(
+      httpStatus.UNAUTHORIZED,
+      'You have no access to this route',
+    );
+  }
 
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: 'User logged in successfully',
-    token: result.token,
-    data: result.data,
+    message: 'User profile retrieved successfully',
+    data: result,
+  });
+});
+
+// update user controller
+const updateUserProfile = catchAsync(async (req, res) => {
+  // get logged user
+  const loggedUser = req.user;
+
+  const result = await UserServices.updateUserIntoDB(
+    req.body,
+    req.params.email,
+  );
+
+  // check if not matched logged in user email then throw error
+  if (loggedUser?.email !== result?.email) {
+    throw new AppError(
+      httpStatus.UNAUTHORIZED,
+      'You have no access to this route',
+    );
+  }
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Profile updated successfully',
+    data: result,
   });
 });
 
 export const UserController = {
-  createUser,
-  loginUser,
+  getUserProfile,
+  updateUserProfile,
 };

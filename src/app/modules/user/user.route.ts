@@ -1,24 +1,22 @@
 import { Router } from 'express';
+import { UserController } from './user.controller';
+import auth from '../../middlewares/auth';
 import validateRequest from '../../middlewares/validateRequest';
 import { UserValidation } from './user.validation';
-import { UserController } from './user.controller';
 
 const router = Router();
 
-// assign all routes there
+// assign user routes
 
-// signup user
-router.post(
-  '/signup',
-  validateRequest(UserValidation.createUserValidationSchema),
-  UserController.createUser,
-);
+// get profile for user
+router.get('/:email', auth('admin', 'user'), UserController.getUserProfile);
 
-// login user
-router.post(
-  '/login',
-  validateRequest(UserValidation.loginUserValidationSchema),
-  UserController.loginUser,
+// update profile for user
+router.put(
+  '/:email',
+  auth('admin', 'user'),
+  validateRequest(UserValidation.updateUserValidationSchema),
+  UserController.updateUserProfile,
 );
 
 export const UserRoutes = router;

@@ -1,58 +1,44 @@
 import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
-import { TLoginUser, TUser } from './user.interface';
-import { User } from './user.model';
-import config from '../../config';
-import { generateToken } from './user.utils';
 
-// sign up user
-const createUserIntoDB = async (payload: TUser) => {
-  // check user have then throw error
-  if (await User.isUserExistsByEmail(payload.email)) {
-    throw new AppError(
-      httpStatus.CONFLICT,
-      'This email already exists another user',
-    );
+import { User } from './user.model';
+import { TUser } from './user.interface';
+
+// get profile user
+const getUserProfileFromDB = async (email: string) => {
+  // check user exist
+  const user = await User.isUserExistsByEmail(email);
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found');
   }
 
-  const result = await User.create(payload);
+  const result = await User.findOne({ email });
 
   return result;
 };
 
-// login user service
-const loginUser = async (payload: TLoginUser) => {
-  // check user are exists
-  const user = await User.isUserExistsByEmail(payload.email);
+// get profile user
+const updateUserIntoDB = async (payload: Partial<TUser>, email: string) => {
+  // check user exist
+  const user = await User.isUserExistsByEmail(email);
 
   if (!user) {
-    throw new AppError(httpStatus.NOT_FOUND, 'User not found!');
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found');
   }
 
-  if (!(await User.isPasswordMatched(payload?.password, user?.password))) {
-    throw new AppError(httpStatus.FORBIDDEN, 'Password nt matched');
-  }
-
-  const jwtPayload = {
-    email: user.email,
-    role: user.role,
-  };
-
-  const accessToken = generateToken(
-    jwtPayload,
-    config.jwt_access_secret as string,
-    config.jwt_access_expires_in as string,
+  const result = await User.findOneAndUpdate(
+    { email },
+    {
+      $set: payload,
+    },
+    { new: true },
   );
 
-  const token: string = `Bearer ${accessToken}`;
-
-  return {
-    token: token,
-    data: user,
-  };
+  return result;
 };
 
 export const UserServices = {
-  createUserIntoDB,
-  loginUser,
+  getUserProfileFromDB,
+  updateUserIntoDB,
 };

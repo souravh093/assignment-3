@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
-import { TUserRole } from '../modules/user/user.interface';
 import catchAsync from '../utils/catchAsync';
 import AppError from '../errors/AppError';
 import httpStatus from 'http-status';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import config from '../config';
 import { User } from '../modules/user/user.model';
+import { TUserRole } from '../modules/auth/auth.interface';
 
 const auth = (...roles: TUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {

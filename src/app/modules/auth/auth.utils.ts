@@ -1,6 +1,6 @@
 // generate token
 import jwt from 'jsonwebtoken';
-import { TGenerateToken } from './user.interface';
+import { TGenerateToken } from './auth.interface';
 
 export const generateToken = (
   jwtPayload: TGenerateToken,
