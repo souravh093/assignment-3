@@ -54,13 +54,17 @@ userSchema.methods.toJSON = function () {
   return user;
 };
 
+// compare password static method
+userSchema.statics.isPasswordMatched = async function (
+  plainTextPassword,
+  hashPassword,
+) {
+  return bcrypt.compare(plainTextPassword, hashPassword);
+};
+
 // check user exists provide user email then send true
 userSchema.statics.isUserExistsByEmail = async function (email: string) {
-  const user = await User.findOne({ email });
-
-  if (user) {
-    return true;
-  }
+  return await User.findOne({ email }).select('+password');
 };
 
 export const User = model<TUser, UserModel>('User', userSchema);

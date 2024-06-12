@@ -3,6 +3,7 @@ import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { UserServices } from './user.service';
 
+// create user controller
 const createUser = catchAsync(async (req, res) => {
   const result = await UserServices.createUserIntoDB(req.body);
 
@@ -14,6 +15,25 @@ const createUser = catchAsync(async (req, res) => {
   });
 });
 
+// login user controller
+const loginUser = catchAsync(async (req, res) => {
+  const result = await UserServices.loginUser(req.body);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'User logged in successfully',
+    data: result,
+  });
+});
+
 export const UserController = {
   createUser,
+  loginUser,
 };
+
+/*
+ bearer
+ __v
+ token
+ */

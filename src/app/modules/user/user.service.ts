@@ -1,11 +1,14 @@
 import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
-import { TUser } from './user.interface';
+import { TLoginUser, TUser } from './user.interface';
 import { User } from './user.model';
+import config from '../../config';
+import { generateToken } from './user.utils';
 
 // sign up user
 const createUserIntoDB = async (payload: TUser) => {
-  if (await User.isUserExistsByEmail(payload?.email)) {
+  // check user have then throw error
+  if (await User.isUserExistsByEmail(payload.email)) {
     throw new AppError(
       httpStatus.CONFLICT,
       'This email already exists another user',
@@ -17,6 +20,37 @@ const createUserIntoDB = async (payload: TUser) => {
   return result;
 };
 
+// login user service
+const loginUser = async (payload: TLoginUser) => {
+  // check user are exists
+  const user = await User.isUserExistsByEmail(payload.email);
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found!');
+  }
+
+  if (!(await User.isPasswordMatched(payload?.password, user?.password))) {
+    throw new AppError(httpStatus.FORBIDDEN, 'Password nt matched');
+  }
+
+  const jwtPayload = {
+    email: user.email,
+    role: user.role,
+  };
+
+  const accessToken = generateToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    config.jwt_access_expires_in as string,
+  );
+
+  return {
+    token: accessToken,
+    data: user,
+  };
+};
+
 export const UserServices = {
   createUserIntoDB,
+  loginUser,
 };

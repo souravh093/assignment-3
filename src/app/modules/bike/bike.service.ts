@@ -1,7 +1,7 @@
 import { TBike } from './bike.interface';
 import { Bike } from './bike.model';
 
-// insert bike information data into database using mongoose 
+// insert bike information data into database using mongoose
 const createBikeIntoDB = async (payload: TBike) => {
   const result = await Bike.create(payload);
 
