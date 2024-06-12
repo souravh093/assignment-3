@@ -12,5 +12,14 @@ export type TGenerateToken = {
   role: string;
 };
 
+// logged in user types
+export type TLoggedUser = {
+  email: string;
+  role: string;
+  id: string;
+  iat: number;
+  exp: number;
+};
+
 // auth interface
 export type TUserRole = keyof typeof USER_ROLE;

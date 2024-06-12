@@ -10,6 +10,7 @@ export type TUser = {
   password: string;
   phone: string;
   address: string;
+  _id?: string;
   role: TRole;
 };
 
