@@ -23,7 +23,8 @@ const loginUser = catchAsync(async (req, res) => {
     success: true,
     statusCode: httpStatus.OK,
     message: 'User logged in successfully',
-    data: result,
+    token: result.token,
+    data: result.data,
   });
 });
 
@@ -31,9 +32,3 @@ export const UserController = {
   createUser,
   loginUser,
 };
-
-/*
- bearer
- __v
- token
- */

@@ -9,15 +9,17 @@ import { User } from '../modules/user/user.model';
 
 const auth = (...roles: TUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const token = req.headers.authorization;
+    const bearerToken = req.headers.authorization;
 
     // if token not found then sent error
-    if (!token) {
+    if (!bearerToken) {
       throw new AppError(
         httpStatus.UNAUTHORIZED,
         'You have no access to this route',
       );
     }
+
+    const token = bearerToken.split(' ')[1];
 
     // check if the token is valid
     const decoded = jwt.verify(

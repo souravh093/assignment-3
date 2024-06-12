@@ -44,8 +44,10 @@ const loginUser = async (payload: TLoginUser) => {
     config.jwt_access_expires_in as string,
   );
 
+  const token: string = `Bearer ${accessToken}`;
+
   return {
-    token: accessToken,
+    token: token,
     data: user,
   };
 };
