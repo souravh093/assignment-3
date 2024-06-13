@@ -9,11 +9,11 @@ const router = Router();
 // assign user routes
 
 // get profile for user
-router.get('/:email', auth('admin', 'user'), UserController.getUserProfile);
+router.get('/me', auth('admin', 'user'), UserController.getUserProfile);
 
 // update profile for user
 router.put(
-  '/:email',
+  '/me',
   auth('admin', 'user'),
   validateRequest(UserValidation.updateUserValidationSchema),
   UserController.updateUserProfile,

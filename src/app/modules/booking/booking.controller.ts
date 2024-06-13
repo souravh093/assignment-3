@@ -27,7 +27,20 @@ const updateBooking = catchAsync(async (req, res) => {
   });
 });
 
+// get my all bookings
+const getMyAllBookings = catchAsync(async (req, res) => {
+  const result = await BookingServices.getMyAllBookingsIntoDB(req.user);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Rentals retrieved successfully',
+    data: result,
+  });
+});
+
 export const BookingController = {
   createBooking,
   updateBooking,
+  getMyAllBookings,
 };

@@ -21,4 +21,6 @@ router.put(
   BookingController.updateBooking,
 );
 
+router.get('/', auth('admin', 'user'), BookingController.getMyAllBookings);
+
 export const BookingRoutes = router;

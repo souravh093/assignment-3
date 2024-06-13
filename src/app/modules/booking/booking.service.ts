@@ -14,11 +14,18 @@ const createBookingIntoDB = async (
     ...payload,
     userId: loggedUser?.id,
   };
+
+  // find bike and update available status
+  await Bike.findByIdAndUpdate(payload.bikeId, {
+    isAvailable: false,
+  });
+
   const result = await Booking.create(bookingData);
 
   return result;
 };
 
+// update booking
 const updateBookingIntoDB = async (id: string) => {
   // find is booking by id
   const findBookedBike = await Booking.findById(id);
@@ -36,20 +43,22 @@ const updateBookingIntoDB = async (id: string) => {
   const bookedTime = findBookedBike?.startTime.getTime();
 
   //   make the hours different
-  const differenceHours = (
-    (currentTime - bookedTime) /
-    (1000 * 60 * 60)
-  ).toFixed(0);
+  const differenceHours = (currentTime - bookedTime) / (1000 * 60 * 60);
 
   //   calculation it and multiply that hours and price per hour
   const totalCost = Number(differenceHours) * Number(findBike?.pricePerHour);
+
+  // find bike and update available status true
+  await Bike.findByIdAndUpdate(findBookedBike?.bikeId, {
+    isAvailable: true,
+  });
 
   //   update return bike booking rentals
   const result = await Booking.findByIdAndUpdate(
     id,
     {
       returnTime: new Date(),
-      totalCost,
+      totalCost: totalCost.toFixed(0),
       isReturned: true,
     },
     { new: true },
@@ -58,7 +67,15 @@ const updateBookingIntoDB = async (id: string) => {
   return result;
 };
 
+// get all booking
+const getMyAllBookingsIntoDB = async (loggedUser: JwtPayload) => {
+  const result = await Booking.find({ userId: loggedUser?.id });
+
+  return result;
+};
+
 export const BookingServices = {
   createBookingIntoDB,
   updateBookingIntoDB,
+  getMyAllBookingsIntoDB,
 };
