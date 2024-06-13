@@ -2,6 +2,7 @@ import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { BikeServices } from './bike.service';
+import AppError from '../../errors/AppError';
 
 // create bike controller
 const createBike = catchAsync(async (req, res) => {
@@ -18,6 +19,10 @@ const createBike = catchAsync(async (req, res) => {
 // get all bikes controller
 const getAllBikes = catchAsync(async (req, res) => {
   const result = await BikeServices.getAllBikesFromDB();
+
+  if (result.length < 1) {
+    throw new AppError(httpStatus.NOT_FOUND, 'No Data Found');
+  }
 
   sendResponse(res, {
     success: true,

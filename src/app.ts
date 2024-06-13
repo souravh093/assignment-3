@@ -3,6 +3,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import router from './app/routes';
 import { globalErrorHandler } from './app/middlewares/globalErrorHandler';
+import notFoundRoute from './app/middlewares/notFroundRoute';
 
 const app: Application = express();
 
@@ -22,5 +23,8 @@ app.get('/', (req: Request, res: Response) => {
     message: 'Bike Rental Server Running...',
   });
 });
+
+// not found route
+app.use(notFoundRoute);
 
 export default app;

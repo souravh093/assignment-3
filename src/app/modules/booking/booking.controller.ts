@@ -2,6 +2,7 @@ import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { BookingServices } from './booking.service';
+import AppError from '../../errors/AppError';
 
 // create booking controller
 const createBooking = catchAsync(async (req, res) => {
@@ -30,6 +31,10 @@ const updateBooking = catchAsync(async (req, res) => {
 // get my all bookings
 const getMyAllBookings = catchAsync(async (req, res) => {
   const result = await BookingServices.getMyAllBookingsIntoDB(req.user);
+
+  if (result.length < 1) {
+    throw new AppError(httpStatus.NOT_FOUND, 'No Data Found');
+  }
 
   sendResponse(res, {
     success: true,

@@ -56,12 +56,16 @@ export const globalErrorHandler: ErrorRequestHandler = (
         message: error?.message,
       },
     ];
+  } else if (error.message === 'No Data Found') {
+    message = 'No Data Found';
   }
 
   return res.status(statusCode).json({
     success: false,
     message,
-    errorMessages,
-    stack: config.node_env === 'development' ? error?.stack : null,
+    ...(message === 'No Data Found' ? { data: [] } : { errorMessages }),
+    ...(message === 'No Data Found'
+      ? null
+      : { stack: config.node_env === 'development' ? error?.stack : null }),
   });
 };
