@@ -2,6 +2,18 @@
 
 # Project Name: Bike rental service for tourists or locals.
 
+# Technologies Used
+* Typescript (Programming language)
+* Express.js (Node.js framework)
+* Mongoose (MongoDB ORM)
+* Zod (Validation Library)
+* Bcrypt.js (Secure Password)
+* jsonwebtoken (authentication and authorization)
+* Eslint (Error showing)
+* Prettier (Format code)
+
+# Backend server setup and how to running
+
 # step-1: initialize npm and setup basic express server
 
 Initialize node package manager(NPM) with default input
