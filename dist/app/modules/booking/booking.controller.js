@@ -12,32 +12,47 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserController = void 0;
+exports.BookingController = void 0;
 const http_status_1 = __importDefault(require("http-status"));
 const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
-const user_service_1 = require("./user.service");
-// get user profile controller
-const getUserProfile = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield user_service_1.UserServices.getUserProfileFromDB(req.user);
+const booking_service_1 = require("./booking.service");
+const noDataFound_1 = __importDefault(require("../../middlewares/noDataFound"));
+// create booking controller
+const createBooking = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield booking_service_1.BookingServices.createBookingIntoDB(req.body, req.user);
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.OK,
-        message: 'User profile retrieved successfully',
+        message: 'Rental created successfully',
         data: result,
     });
 }));
-// update user controller
-const updateUserProfile = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield user_service_1.UserServices.updateUserIntoDB(req.body, req.user);
+// update booking or return bike controller
+const updateBooking = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield booking_service_1.BookingServices.updateBookingIntoDB(req.params.id);
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.OK,
-        message: 'Profile updated successfully',
+        message: 'Bike returned successfully',
         data: result,
     });
 }));
-exports.UserController = {
-    getUserProfile,
-    updateUserProfile,
+// get my all bookings
+const getMyAllBookings = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield booking_service_1.BookingServices.getMyAllBookingsIntoDB(req.user);
+    const isNoDataFound = (0, noDataFound_1.default)(res, result);
+    if (!isNoDataFound) {
+        (0, sendResponse_1.default)(res, {
+            success: true,
+            statusCode: http_status_1.default.OK,
+            message: 'Rentals retrieved successfully',
+            data: result,
+        });
+    }
+}));
+exports.BookingController = {
+    createBooking,
+    updateBooking,
+    getMyAllBookings,
 };

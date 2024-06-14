@@ -16,14 +16,29 @@ exports.UserServices = void 0;
 const http_status_1 = __importDefault(require("http-status"));
 const AppError_1 = __importDefault(require("../../errors/AppError"));
 const user_model_1 = require("./user.model");
-// sign up user
-const createUserIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    if (yield user_model_1.User.isUserExistsByEmail(payload === null || payload === void 0 ? void 0 : payload.email)) {
-        throw new AppError_1.default(http_status_1.default.CONFLICT, 'This email already exists another user');
+// get profile user
+const getUserProfileFromDB = (loggedUser) => __awaiter(void 0, void 0, void 0, function* () {
+    // check user exist
+    const user = yield user_model_1.User.isUserExistsByEmail(loggedUser === null || loggedUser === void 0 ? void 0 : loggedUser.email);
+    if (!user) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'User not found');
     }
-    const result = yield user_model_1.User.create(payload);
+    const result = yield user_model_1.User.findById(loggedUser === null || loggedUser === void 0 ? void 0 : loggedUser.id);
+    return result;
+});
+// get profile user
+const updateUserIntoDB = (payload, loggedUser) => __awaiter(void 0, void 0, void 0, function* () {
+    // check user exist
+    const user = yield user_model_1.User.isUserExistsByEmail(loggedUser === null || loggedUser === void 0 ? void 0 : loggedUser.email);
+    if (!user) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'User not found');
+    }
+    const result = yield user_model_1.User.findOneAndUpdate({ _id: loggedUser === null || loggedUser === void 0 ? void 0 : loggedUser.id }, {
+        $set: payload,
+    }, { new: true });
     return result;
 });
 exports.UserServices = {
-    createUserIntoDB,
+    getUserProfileFromDB,
+    updateUserIntoDB,
 };

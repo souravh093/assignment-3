@@ -31,7 +31,15 @@ const updateUserValidationSchema = zod_1.z.object({
         role: zod_1.z.string({ required_error: 'Role is required' }).optional(),
     }),
 });
+// login user validation using zod
+const loginUserValidationSchema = zod_1.z.object({
+    body: zod_1.z.object({
+        email: zod_1.z.string({ required_error: 'Email is required' }),
+        password: zod_1.z.string({ required_error: 'Password is Required' }),
+    }),
+});
 exports.UserValidation = {
     createUserValidationSchema,
     updateUserValidationSchema,
+    loginUserValidationSchema,
 };

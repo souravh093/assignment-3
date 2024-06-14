@@ -8,6 +8,7 @@ const cors_1 = __importDefault(require("cors"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const routes_1 = __importDefault(require("./app/routes"));
 const globalErrorHandler_1 = require("./app/middlewares/globalErrorHandler");
+const notFroundRoute_1 = __importDefault(require("./app/middlewares/notFroundRoute"));
 const app = (0, express_1.default)();
 // parsers
 app.use(express_1.default.json());
@@ -22,4 +23,6 @@ app.get('/', (req, res) => {
         message: 'Bike Rental Server Running...',
     });
 });
+// not found route
+app.use(notFroundRoute_1.default);
 exports.default = app;

@@ -35,11 +35,7 @@ const bikeSchema = new mongoose_1.Schema({
         type: String,
         required: true,
     },
+}, {
+    timestamps: true,
 });
-// delete version from response
-bikeSchema.methods.toJSON = function () {
-    const bike = this.toObject();
-    delete bike.__v;
-    return bike;
-};
 exports.Bike = (0, mongoose_1.model)('Bike', bikeSchema);

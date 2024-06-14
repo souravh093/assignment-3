@@ -5,10 +5,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserRoutes = void 0;
 const express_1 = require("express");
+const user_controller_1 = require("./user.controller");
+const auth_1 = __importDefault(require("../../middlewares/auth"));
 const validateRequest_1 = __importDefault(require("../../middlewares/validateRequest"));
 const user_validation_1 = require("./user.validation");
-const user_controller_1 = require("./user.controller");
 const router = (0, express_1.Router)();
-// assign all routes there
-router.post('/signup', (0, validateRequest_1.default)(user_validation_1.UserValidation.createUserValidationSchema), user_controller_1.UserController.createUser);
+// assign user routes
+// get profile for user
+router.get('/me', (0, auth_1.default)('admin', 'user'), user_controller_1.UserController.getUserProfile);
+// update profile for user
+router.put('/me', (0, auth_1.default)('admin', 'user'), (0, validateRequest_1.default)(user_validation_1.UserValidation.updateUserValidationSchema), user_controller_1.UserController.updateUserProfile);
 exports.UserRoutes = router;

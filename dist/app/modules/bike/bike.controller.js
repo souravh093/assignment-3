@@ -17,6 +17,7 @@ const http_status_1 = __importDefault(require("http-status"));
 const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
 const bike_service_1 = require("./bike.service");
+const noDataFound_1 = __importDefault(require("../../middlewares/noDataFound"));
 // create bike controller
 const createBike = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield bike_service_1.BikeServices.createBikeIntoDB(req.body);
@@ -27,17 +28,42 @@ const createBike = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
         data: result,
     });
 }));
-// get all bike controller
+// get all bikes controller
 const getAllBikes = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield bike_service_1.BikeServices.getAllBikesFromDB();
+    const isNoDataFounds = (0, noDataFound_1.default)(res, result);
+    if (!isNoDataFounds) {
+        (0, sendResponse_1.default)(res, {
+            success: true,
+            statusCode: http_status_1.default.OK,
+            message: 'Bikes retrieved successfully',
+            data: result,
+        });
+    }
+}));
+// update bike controller
+const updateBike = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield bike_service_1.BikeServices.updateBikeIntoDB(req.body, req.params.id);
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.OK,
-        message: 'Bikes retrieved successfully',
+        message: 'Bike updated successfully',
+        data: result,
+    });
+}));
+// delete bike controller
+const deleteBike = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield bike_service_1.BikeServices.deleteBikeFromDB(req.params.id);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: 'Bike deleted successfully',
         data: result,
     });
 }));
 exports.BikeController = {
     createBike,
     getAllBikes,
+    updateBike,
+    deleteBike,
 };

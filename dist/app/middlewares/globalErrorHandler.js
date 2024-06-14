@@ -56,11 +56,11 @@ const globalErrorHandler = (error, req, res, next) => {
             },
         ];
     }
-    return res.status(statusCode).json({
-        success: false,
-        message,
-        errorMessages,
-        stack: config_1.default.node_env === 'development' ? error === null || error === void 0 ? void 0 : error.stack : null,
-    });
+    else if (error.message === 'No Data Found') {
+        message = 'No Data Found';
+    }
+    return res.status(statusCode).json(Object.assign(Object.assign({ success: false, message }, (message === 'No Data Found' ? { data: [] } : { errorMessages })), (message === 'No Data Found'
+        ? null
+        : { stack: config_1.default.node_env === 'development' ? error === null || error === void 0 ? void 0 : error.stack : null })));
 };
 exports.globalErrorHandler = globalErrorHandler;

@@ -12,32 +12,33 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserController = void 0;
+exports.AuthController = void 0;
 const http_status_1 = __importDefault(require("http-status"));
 const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
-const user_service_1 = require("./user.service");
-// get user profile controller
-const getUserProfile = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield user_service_1.UserServices.getUserProfileFromDB(req.user);
+const auth_service_1 = require("./auth.service");
+// create user controller
+const signupUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield auth_service_1.AuthService.signupUser(req.body);
     (0, sendResponse_1.default)(res, {
         success: true,
-        statusCode: http_status_1.default.OK,
-        message: 'User profile retrieved successfully',
+        statusCode: http_status_1.default.CREATED,
+        message: 'User registered successfully',
         data: result,
     });
 }));
-// update user controller
-const updateUserProfile = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield user_service_1.UserServices.updateUserIntoDB(req.body, req.user);
+// login user controller
+const loginUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield auth_service_1.AuthService.loginUser(req.body);
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.OK,
-        message: 'Profile updated successfully',
-        data: result,
+        message: 'User logged in successfully',
+        token: result.token,
+        data: result.data,
     });
 }));
-exports.UserController = {
-    getUserProfile,
-    updateUserProfile,
+exports.AuthController = {
+    signupUser,
+    loginUser,
 };

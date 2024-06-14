@@ -30,6 +30,7 @@ const userSchema = new mongoose_1.Schema({
     password: {
         type: String,
         required: true,
+        select: 0,
     },
     phone: {
         type: String,
@@ -59,13 +60,16 @@ userSchema.methods.toJSON = function () {
     delete user.password;
     return user;
 };
+// compare password static method
+userSchema.statics.isPasswordMatched = function (plainTextPassword, hashPassword) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return bcryptjs_1.default.compare(plainTextPassword, hashPassword);
+    });
+};
 // check user exists provide user email then send true
 userSchema.statics.isUserExistsByEmail = function (email) {
     return __awaiter(this, void 0, void 0, function* () {
-        const user = yield exports.User.findOne({ email });
-        if (user) {
-            return true;
-        }
+        return yield exports.User.findOne({ email }).select('+password');
     });
 };
 exports.User = (0, mongoose_1.model)('User', userSchema);
