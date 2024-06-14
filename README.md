@@ -2,15 +2,26 @@
 
 # Project Name: Bike rental service for tourists or locals.
 
+# Live URL:
+
+```bash
+https://bike-booker.vercel.app/
+```
+
+# Project description
+
+This is bike rental backend project. This project we use major great technologies like Typescript, mongoose, zod, express.js etc. This project using we can create user with role like admin and user. Bike rental project using any tourist rent bike and when tourist back admin dynamically know how much amount red this bike this tourist.
+
 # Technologies Used
-* Typescript (Programming language)
-* Express.js (Node.js framework)
-* Mongoose (MongoDB ORM)
-* Zod (Validation Library)
-* Bcrypt.js (Secure Password)
-* jsonwebtoken (authentication and authorization)
-* Eslint (Error showing)
-* Prettier (Format code)
+
+- Typescript (Programming language)
+- Express.js (Node.js framework)
+- Mongoose (MongoDB ORM)
+- Zod (Validation Library)
+- Bcrypt.js (Secure Password)
+- jsonwebtoken (authentication and authorization)
+- Eslint (Error showing)
+- Prettier (Format code)
 
 # Backend server setup and how to running
 
@@ -22,10 +33,16 @@ Initialize node package manager(NPM) with default input
 npm init -y
 ```
 
-Install the express, cors, and dotenv package
+Install the express, cors, jsonwebtoken, and dotenv package
 
 ```javascript
-npm install express cors dotenv
+npm install express cors dotenv jsonwebtoken
+```
+
+Install bcrypt.js for secure password
+
+```
+npm install bcrypt.js
 ```
 
 Make folder structure using modular pattern
@@ -33,6 +50,11 @@ Make folder structure using modular pattern
 ```javascript
 src
     app
+      middleware
+      errors
+      routes
+      utils
+      interfaces
       config
         index.ts
       modules
