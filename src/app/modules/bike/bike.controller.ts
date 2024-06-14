@@ -2,7 +2,6 @@ import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { BikeServices } from './bike.service';
-import AppError from '../../errors/AppError';
 import noDataFound from '../../middlewares/noDataFound';
 
 // create bike controller
