@@ -2,7 +2,7 @@ import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { BookingServices } from './booking.service';
-import AppError from '../../errors/AppError';
+import noDataFound from '../../middlewares/noDataFound';
 
 // create booking controller
 const createBooking = catchAsync(async (req, res) => {
@@ -32,16 +32,16 @@ const updateBooking = catchAsync(async (req, res) => {
 const getMyAllBookings = catchAsync(async (req, res) => {
   const result = await BookingServices.getMyAllBookingsIntoDB(req.user);
 
-  if (result.length < 1) {
-    throw new AppError(httpStatus.NOT_FOUND, 'No Data Found');
-  }
+  const isNoDataFound = noDataFound(res, result);
 
-  sendResponse(res, {
-    success: true,
-    statusCode: httpStatus.OK,
-    message: 'Rentals retrieved successfully',
-    data: result,
-  });
+  if (!isNoDataFound) {
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'Rentals retrieved successfully',
+      data: result,
+    });
+  }
 });
 
 export const BookingController = {

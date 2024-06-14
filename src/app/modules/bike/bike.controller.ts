@@ -3,6 +3,7 @@ import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { BikeServices } from './bike.service';
 import AppError from '../../errors/AppError';
+import noDataFound from '../../middlewares/noDataFound';
 
 // create bike controller
 const createBike = catchAsync(async (req, res) => {
@@ -20,16 +21,16 @@ const createBike = catchAsync(async (req, res) => {
 const getAllBikes = catchAsync(async (req, res) => {
   const result = await BikeServices.getAllBikesFromDB();
 
-  if (result.length < 1) {
-    throw new AppError(httpStatus.NOT_FOUND, 'No Data Found');
-  }
+  const isNoDataFounds = noDataFound(res, result);
 
-  sendResponse(res, {
-    success: true,
-    statusCode: httpStatus.OK,
-    message: 'Bikes retrieved successfully',
-    data: result,
-  });
+  if (!isNoDataFounds) {
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'Bikes retrieved successfully',
+      data: result,
+    });
+  }
 });
 
 // update bike controller

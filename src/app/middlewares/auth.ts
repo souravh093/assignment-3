@@ -13,10 +13,11 @@ const auth = (...roles: TUserRole[]) => {
 
     // if token not found then sent error
     if (!bearerToken) {
-      throw new AppError(
-        httpStatus.UNAUTHORIZED,
-        'You have no access to this route',
-      );
+      return res.status(httpStatus.UNAUTHORIZED).json({
+        success: false,
+        statusCode: httpStatus.UNAUTHORIZED,
+        message: 'You have no access to this route',
+      });
     }
 
     const token = bearerToken.split(' ')[1];
@@ -39,10 +40,11 @@ const auth = (...roles: TUserRole[]) => {
 
     // checking role have in the existing role
     if (roles && !roles.includes(role)) {
-      throw new AppError(
-        httpStatus.UNAUTHORIZED,
-        'You have no access to this route',
-      );
+      return res.status(httpStatus.UNAUTHORIZED).json({
+        success: false,
+        statusCode: httpStatus.UNAUTHORIZED,
+        message: 'You have no access to this route',
+      });
     }
 
     // add this in request
