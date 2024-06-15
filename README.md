@@ -5,7 +5,7 @@
 # Live URL:
 
 ```bash
-https://bike-booker.vercel.app/
+https://bike-booker.vercel.app
 ```
 
 # Project description
@@ -22,6 +22,17 @@ This is bike rental backend project. This project we use major great technologie
 - jsonwebtoken (authentication and authorization)
 - Eslint (Error showing)
 - Prettier (Format code)
+
+# Features
+
+* SignUp and Login Admin
+* SignUp and Login User
+* Create Bike for client
+* Authentication
+* Authorization
+* Rent Bikes
+* Secure Password
+
 
 # Backend server setup and how to running
 

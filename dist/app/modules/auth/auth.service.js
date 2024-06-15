@@ -35,7 +35,7 @@ const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'User not found!');
     }
     if (!(yield user_model_1.User.isPasswordMatched(payload === null || payload === void 0 ? void 0 : payload.password, user === null || user === void 0 ? void 0 : user.password))) {
-        throw new AppError_1.default(http_status_1.default.FORBIDDEN, 'Password nt matched');
+        throw new AppError_1.default(http_status_1.default.FORBIDDEN, 'Password not matched');
     }
     const jwtPayload = {
         email: user.email,
