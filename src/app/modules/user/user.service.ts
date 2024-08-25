@@ -13,7 +13,7 @@ const getUserProfileFromDB = async (loggedUser: JwtPayload) => {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found');
   }
 
-  const result = await User.findById(loggedUser?.id);
+  const result = await User.findById(user?._id);
 
   return result;
 };
@@ -31,7 +31,7 @@ const updateUserIntoDB = async (
   }
 
   const result = await User.findOneAndUpdate(
-    { _id: loggedUser?.id },
+    { email: loggedUser?.email },
     {
       $set: payload,
     },

@@ -4,7 +4,7 @@ import { TUser } from '../user/user.interface';
 import { User } from '../user/user.model';
 import { TLoginUser } from './auth.interface';
 import config from '../../config';
-import { generateToken } from './auth.utils';
+import { generateToken, verifyToken } from './auth.utils';
 
 // sign up user
 const signupUser = async (payload: TUser) => {
@@ -23,6 +23,7 @@ const signupUser = async (payload: TUser) => {
 
 // login user service
 const loginUser = async (payload: TLoginUser) => {
+  // console.log(payload)
   // check user are exist
   const user = await User.isUserExistsByEmail(payload.email);
 
@@ -37,7 +38,6 @@ const loginUser = async (payload: TLoginUser) => {
   const jwtPayload = {
     email: user.email,
     role: user.role,
-    id: user._id,
   };
 
   // generate token
@@ -47,15 +47,48 @@ const loginUser = async (payload: TLoginUser) => {
     config.jwt_access_expires_in as string,
   );
 
-  const token: string = `${accessToken}`;
+  const refreshToken = generateToken(
+    jwtPayload,
+    config.jwt_refresh_secret as string,
+    config.jwt_refresh_expires_in as string,
+  );
 
   return {
-    token: token,
+    accessToken,
+    refreshToken,
     data: user,
+  };
+};
+
+const refreshToken = async (token: string) => {
+  const decoded = verifyToken(token, config.jwt_refresh_secret as string);
+
+  const { userEmail } = decoded;
+
+  const user = await User.isUserExistsByEmail(userEmail);
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'This user is not found!');
+  }
+
+  const jwtPayload = {
+    email: user.email,
+    role: user.role,
+  };
+
+  const accessToken = generateToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    config.jwt_access_expires_in as string,
+  );
+
+  return {
+    accessToken,
   };
 };
 
 export const AuthService = {
   signupUser,
   loginUser,
+  refreshToken,
 };

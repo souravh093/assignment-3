@@ -1,5 +1,5 @@
 // generate token
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { TGenerateToken } from './auth.interface';
 
 export const generateToken = (
@@ -11,3 +11,8 @@ export const generateToken = (
     expiresIn: expiresIn,
   });
 };
+
+export const verifyToken = (token: string, secret: string) => {
+  return jwt.verify(token, secret) as JwtPayload;
+};
+

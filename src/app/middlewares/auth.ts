@@ -30,6 +30,7 @@ const auth = (...roles: TUserRole[]) => {
 
     const { role, email } = decoded;
 
+
     // find user
     const user = await User.isUserExistsByEmail(email);
 

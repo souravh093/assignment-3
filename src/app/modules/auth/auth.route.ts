@@ -6,7 +6,6 @@ import { AuthController } from './auth.controller';
 const router = Router();
 
 // assign auth routes
-
 // signup user
 router.post(
   '/signup',
@@ -19,6 +18,12 @@ router.post(
   '/login',
   validateRequest(UserValidation.loginUserValidationSchema),
   AuthController.loginUser,
+);
+
+router.post(
+  '/refresh-token',
+  validateRequest(UserValidation.refreshTokenValidationSchema),
+  AuthController.refreshToken,
 );
 
 export const AuthRoutes = router;
