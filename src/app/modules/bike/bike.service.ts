@@ -22,7 +22,6 @@ const getAllBikesFromDB = async (query: Record<string, unknown>) => {
 
   const result = await bikeQuery.modelQuery;
 
-
   const meta = await bikeQuery.countTotal();
 
   return {
@@ -31,9 +30,18 @@ const getAllBikesFromDB = async (query: Record<string, unknown>) => {
   };
 };
 
+const getSingleBikeFromDB = async (id: string) => {
+  const findBike = await Bike.findById(id);
+
+  if (!findBike) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Bike not found');
+  }
+
+  return findBike;
+};
+
 // update bike from database
 const updateBikeIntoDB = async (payload: Partial<TBike>, id: string) => {
-  console.log(payload)
   // check the requested update bike are available
   const findBike = await Bike.findById(id);
 
@@ -65,4 +73,5 @@ export const BikeServices = {
   getAllBikesFromDB,
   updateBikeIntoDB,
   deleteBikeFromDB,
+  getSingleBikeFromDB,
 };

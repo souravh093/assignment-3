@@ -35,8 +35,19 @@ const getAllBikes = catchAsync(async (req, res) => {
 });
 
 // update bike controller
+const singleBike = catchAsync(async (req, res) => {
+  const result = await BikeServices.getSingleBikeFromDB(req.params.id);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Bike retrieved successfully',
+    data: result,
+  });
+});
+
+// update bike controller
 const updateBike = catchAsync(async (req, res) => {
-  console.log(req.body)
   const result = await BikeServices.updateBikeIntoDB(req.body, req.params.id);
 
   sendResponse(res, {
@@ -64,4 +75,5 @@ export const BikeController = {
   getAllBikes,
   updateBike,
   deleteBike,
+  singleBike,
 };

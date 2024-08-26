@@ -47,9 +47,16 @@ const refreshTokenValidationSchema = z.object({
   }),
 });
 
+const updateRoleValidationSchema = z.object({
+  body: z.object({
+    role: z.string({ required_error: 'Role is Required' }),
+  }),
+});
+
 export const UserValidation = {
   createUserValidationSchema,
   updateUserValidationSchema,
   loginUserValidationSchema,
-  refreshTokenValidationSchema
+  refreshTokenValidationSchema,
+  updateRoleValidationSchema
 };

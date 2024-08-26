@@ -10,6 +10,7 @@ const router = Router();
 
 // get profile for user
 router.get('/me', auth('admin', 'user'), UserController.getUserProfile);
+router.get('/all', auth('admin'), UserController.getAllUsers);
 
 // update profile for user
 router.put(
@@ -18,5 +19,14 @@ router.put(
   validateRequest(UserValidation.updateUserValidationSchema),
   UserController.updateUserProfile,
 );
+
+router.put(
+  '/role/:id',
+  auth('admin'),
+  validateRequest(UserValidation.updateRoleValidationSchema),
+  UserController.updateRole,
+);
+
+router.delete('/:id', auth('admin'), UserController.deleteUsers);
 
 export const UserRoutes = router;
