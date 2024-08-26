@@ -33,6 +33,7 @@ const getAllBikesFromDB = async (query: Record<string, unknown>) => {
 
 // update bike from database
 const updateBikeIntoDB = async (payload: Partial<TBike>, id: string) => {
+  console.log(payload)
   // check the requested update bike are available
   const findBike = await Bike.findById(id);
 

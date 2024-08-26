@@ -6,6 +6,7 @@ import noDataFound from '../../middlewares/noDataFound';
 
 // create bike controller
 const createBike = catchAsync(async (req, res) => {
+  
   const result = await BikeServices.createBikeIntoDB(req.body);
 
   sendResponse(res, {
@@ -35,6 +36,7 @@ const getAllBikes = catchAsync(async (req, res) => {
 
 // update bike controller
 const updateBike = catchAsync(async (req, res) => {
+  console.log(req.body)
   const result = await BikeServices.updateBikeIntoDB(req.body, req.params.id);
 
   sendResponse(res, {
