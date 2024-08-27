@@ -47,6 +47,46 @@ const createBookingIntoDB = async (
   return { result, paymentSession };
 };
 
+const updateBookingWithPayment = async (
+  id: string,
+  loggedUser: JwtPayload,
+  amount: string,
+) => {
+  const findBookedBike = await Booking.findById(id);
+  
+  if (!findBookedBike) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Rentals not found');
+  }
+
+  const user = await User.findById(loggedUser?.id);
+  const transactionId = `TXN${Date.now()}${Math.floor(10000 + Math.random() * 90000)}`;
+
+  const paymentInfo: TPaymentInfo = {
+    transactionId,
+    amount: amount,
+    customerName: user?.name,
+    customerEmail: user?.email,
+    customerPhone: user?.phone,
+    customerAddress: user?.address,
+    paidStatus: "full-paid",
+  };
+
+  const paymentSession = await initiatePayment(paymentInfo);
+
+  const bookingWithPayment = {
+    paidStatus: 'full-paid',
+    transactionId,
+  };
+
+  const result = await Booking.findByIdAndUpdate(id, {
+    paidStatus: bookingWithPayment.paidStatus,
+    transactionId: bookingWithPayment.transactionId,
+  });
+
+
+  return { result, paymentSession };
+};
+
 // update booking
 const updateBookingIntoDB = async (id: string) => {
   // find is booking by id
@@ -90,8 +130,28 @@ const updateBookingIntoDB = async (id: string) => {
 };
 
 // get all booking
-const getMyAllBookingsIntoDB = async (loggedUser: JwtPayload) => {
-  const result = await Booking.find({ userId: loggedUser?.id });
+const getMyAllBookingsIntoDB = async (
+  loggedUser: JwtPayload,
+  paidStatus: string,
+) => {
+  let result;
+  if (paidStatus === 'initial-paid') {
+    result = await Booking.find({
+      userId: loggedUser?.id,
+      paidStatus: 'initial-paid',
+      isReturned: true,
+    }).populate('bikeId');
+  } else if (paidStatus === 'full-paid') {
+    result = await Booking.find({
+      userId: loggedUser?.id,
+      paidStatus: 'full-paid',
+      isReturned: true,
+    }).populate('bikeId');
+  } else {
+    result = await Booking.find({
+      userId: loggedUser?.id,
+    }).populate('bikeId');
+  }
 
   return result;
 };
@@ -100,4 +160,5 @@ export const BookingServices = {
   createBookingIntoDB,
   updateBookingIntoDB,
   getMyAllBookingsIntoDB,
+  updateBookingWithPayment,
 };

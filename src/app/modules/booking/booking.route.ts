@@ -14,6 +14,13 @@ router.post(
   BookingController.createBooking,
 );
 
+// all booking routes
+router.put(
+  '/pay/:id',
+  auth('admin', 'user'),
+  BookingController.updateBookingWithPayment,
+);
+
 router.put(
   '/:id/return',
   auth('admin'),

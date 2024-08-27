@@ -5,6 +5,7 @@ import { BookingServices } from './booking.service';
 import noDataFound from '../../middlewares/noDataFound';
 
 // create booking controller
+
 const createBooking = catchAsync(async (req, res) => {
   const { result, paymentSession } = await BookingServices.createBookingIntoDB(
     req.body,
@@ -20,6 +21,22 @@ const createBooking = catchAsync(async (req, res) => {
   });
 });
 
+const updateBookingWithPayment = catchAsync(async (req, res) => {
+  const { result, paymentSession } =
+    await BookingServices.updateBookingWithPayment(
+      req.params.id,
+      req.user,
+      req.body.amount,
+    );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Rental created successfully',
+    data: result,
+    paymentSession,
+  });
+});
 // update booking or return bike controller
 const updateBooking = catchAsync(async (req, res) => {
   const result = await BookingServices.updateBookingIntoDB(req.params.id);
@@ -34,7 +51,10 @@ const updateBooking = catchAsync(async (req, res) => {
 
 // get my all bookings
 const getMyAllBookings = catchAsync(async (req, res) => {
-  const result = await BookingServices.getMyAllBookingsIntoDB(req.user);
+  const result = await BookingServices.getMyAllBookingsIntoDB(
+    req.user,
+    req.query.paidStatus as string,
+  );
 
   const isNoDataFound = noDataFound(res, result);
 
@@ -52,4 +72,5 @@ export const BookingController = {
   createBooking,
   updateBooking,
   getMyAllBookings,
+  updateBookingWithPayment,
 };

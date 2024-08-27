@@ -5,4 +5,5 @@ export interface TPaymentInfo {
   customerEmail?: string;
   customerPhone?: string;
   customerAddress?: string;
+  paidStatus?: string;
 }

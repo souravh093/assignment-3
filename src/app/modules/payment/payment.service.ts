@@ -1,14 +1,18 @@
 import { Booking } from '../booking/booking.model';
 import { verifyPayment } from './payment.utils';
 
-const confirmationService = async (transactionId: string, status: string) => {
+const confirmationService = async (
+  transactionId: string,
+  status: string,
+  paidStatus: string,
+) => {
   const verifyResponse = await verifyPayment(transactionId);
 
   if (verifyResponse && verifyResponse?.pay_status === 'Successfully') {
     await Booking.findOneAndUpdate(
       { transactionId },
       {
-        paidStatus: 'initial-paid',
+        paidStatus: paidStatus === 'full-paid' ? 'full-paid' : 'initial-paid',
       },
     );
   }
