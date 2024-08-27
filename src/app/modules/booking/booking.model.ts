@@ -29,6 +29,15 @@ const bookingSchema = new Schema<TBooking>({
     type: Boolean,
     default: false,
   },
+  paidStatus: {
+    type: String,
+    enum: ['no-paid', 'initial-paid', 'full-paid'],
+    default: 'no-paid',
+  },
+  transactionId: {
+    type: String,
+    required: true,
+  },
 });
 
 export const Booking = model<TBooking>('Booking', bookingSchema);

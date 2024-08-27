@@ -4,6 +4,9 @@ import { Booking } from './booking.model';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 import { Bike } from '../bike/bike.model';
+import { initiatePayment } from '../payment/payment.utils';
+import { User } from '../user/user.model';
+import { TPaymentInfo } from '../../types/payment.interface';
 
 // booking create service
 const createBookingIntoDB = async (
@@ -19,6 +22,21 @@ const createBookingIntoDB = async (
   await Bike.findByIdAndUpdate(payload.bikeId, {
     isAvailable: false,
   });
+
+  const user = await User.findById(loggedUser?.id);
+
+
+
+  const paymentInfo: TPaymentInfo = {
+    transactionId: `TXN${Date.now()}${Math.floor(10000 + Math.random() * 90000)}`,
+    amount: '100',
+    customerName: user?.name,
+    customerEmail: user?.email,
+    customerPhone: user?.phone,
+    customerAddress: user?.address,
+  };
+
+  const paymentSession = await initiatePayment(paymentInfo);
 
   const result = await Booking.create(bookingData);
 

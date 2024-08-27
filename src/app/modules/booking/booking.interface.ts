@@ -8,4 +8,6 @@ export type TBooking = {
   returnTime?: Date;
   totalCost?: number;
   isReturned: boolean;
+  paidStatus?: 'no-paid' | 'initial-paid' | 'full-paid';
+  transactionId?: string;
 };
