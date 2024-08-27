@@ -5,11 +5,17 @@ type TMeta = {
   totalPage: number;
 };
 
+export type TPaymentSession = {
+  result: boolean;
+  payment_url: string;
+};
+
 export type TResponse<T> = {
   statusCode: number;
   success: boolean;
   message?: string;
   token?: string;
-  meta?: TMeta, 
+  paymentSession?: TPaymentSession;
+  meta?: TMeta;
   data: T;
 };

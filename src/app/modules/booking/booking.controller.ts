@@ -6,13 +6,17 @@ import noDataFound from '../../middlewares/noDataFound';
 
 // create booking controller
 const createBooking = catchAsync(async (req, res) => {
-  const result = await BookingServices.createBookingIntoDB(req.body, req.user);
+  const { result, paymentSession } = await BookingServices.createBookingIntoDB(
+    req.body,
+    req.user,
+  );
 
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
     message: 'Rental created successfully',
     data: result,
+    paymentSession,
   });
 });
 

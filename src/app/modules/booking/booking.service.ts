@@ -24,11 +24,10 @@ const createBookingIntoDB = async (
   });
 
   const user = await User.findById(loggedUser?.id);
-
-
+  const transactionId = `TXN${Date.now()}${Math.floor(10000 + Math.random() * 90000)}`;
 
   const paymentInfo: TPaymentInfo = {
-    transactionId: `TXN${Date.now()}${Math.floor(10000 + Math.random() * 90000)}`,
+    transactionId,
     amount: '100',
     customerName: user?.name,
     customerEmail: user?.email,
@@ -38,9 +37,14 @@ const createBookingIntoDB = async (
 
   const paymentSession = await initiatePayment(paymentInfo);
 
-  const result = await Booking.create(bookingData);
+  const bookingWithPayment = {
+    ...bookingData,
+    transactionId,
+  };
 
-  return result;
+  const result = await Booking.create(bookingWithPayment);
+
+  return { result, paymentSession };
 };
 
 // update booking

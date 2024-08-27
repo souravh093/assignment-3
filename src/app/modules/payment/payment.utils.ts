@@ -8,9 +8,9 @@ export const initiatePayment = async (paymentData: TPaymentInfo) => {
   const res = await axios.post(config.payment_url!, {
     store_id: config.store_id,
     tran_id: paymentData.transactionId,
-    success_url: 'http://localhost:5000/api/payments/confirmation',
-    fail_url: 'http://www.merchantdomain.com/faile dpage.html',
-    cancel_url: 'http://www.merchantdomain.com/can cellpage.html',
+    success_url: `http://localhost:5000/api/payments/confirmation?transactionId=${paymentData.transactionId}&status=success`,
+    fail_url: `http://localhost:5000/api/payments/confirmation?status=failed`,
+    cancel_url: 'http://localhost:5173',
     amount: paymentData.amount,
     currency: 'BDT',
     signature_key: config.signature_key,
@@ -28,4 +28,17 @@ export const initiatePayment = async (paymentData: TPaymentInfo) => {
   });
 
   return res.data;
+};
+
+export const verifyPayment = async (transactionId: string) => {
+  const response = await axios.get(config.payment_verify_url!, {
+    params: {
+      store_id: config.store_id,
+      signature_key: config.signature_key,
+      type: 'json',
+      request_id: transactionId,
+    },
+  });
+
+  return response.data;
 };
