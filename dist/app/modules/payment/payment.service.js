@@ -8,8 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PaymentServices = void 0;
+const config_1 = __importDefault(require("../../config"));
 const booking_model_1 = require("../booking/booking.model");
 const payment_utils_1 = require("./payment.utils");
 const confirmationService = (transactionId, status, paidStatus) => __awaiter(void 0, void 0, void 0, function* () {
@@ -71,7 +75,7 @@ const confirmationService = (transactionId, status, paidStatus) => __awaiter(voi
           <h1 class="${status === 'success' ? 'success' : 'cancel'}">
             Payment ${status === 'success' ? 'Successful' : 'Canceled'}
           </h1>
-          <a href="http://localhost:5173/dashboard" class="redirect-link ${status === 'success' ? 'success-link' : 'cancel-link'}">
+          <a href="${config_1.default.client_url}/dashboard" class="redirect-link ${status === 'success' ? 'success-link' : 'cancel-link'}">
             ${status === 'success' ? 'Go to Dashboard' : 'Retry Payment'}
           </a>
         </div>

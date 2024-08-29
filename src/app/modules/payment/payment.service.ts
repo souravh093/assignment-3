@@ -1,3 +1,4 @@
+import config from '../../config';
 import { Booking } from '../booking/booking.model';
 import { verifyPayment } from './payment.utils';
 
@@ -71,7 +72,7 @@ const confirmationService = async (
           <h1 class="${status === 'success' ? 'success' : 'cancel'}">
             Payment ${status === 'success' ? 'Successful' : 'Canceled'}
           </h1>
-          <a href="http://localhost:5173/dashboard" class="redirect-link ${status === 'success' ? 'success-link' : 'cancel-link'}">
+          <a href="${config.client_url}/dashboard" class="redirect-link ${status === 'success' ? 'success-link' : 'cancel-link'}">
             ${status === 'success' ? 'Go to Dashboard' : 'Retry Payment'}
           </a>
         </div>
