@@ -2,7 +2,6 @@ import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { BookingServices } from './booking.service';
-import noDataFound from '../../middlewares/noDataFound';
 
 // create booking controller
 
@@ -57,16 +56,12 @@ const getMyAllBookings = catchAsync(async (req, res) => {
     req.query.paidStatus as string,
   );
 
-  const isNoDataFound = noDataFound(res, result);
-
-  if (!isNoDataFound) {
-    sendResponse(res, {
-      success: true,
-      statusCode: httpStatus.OK,
-      message: 'Rentals retrieved successfully',
-      data: result,
-    });
-  }
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Rentals retrieved successfully',
+    data: result,
+  });
 });
 
 const getMyAllBookingsForAdmin = catchAsync(async (req, res) => {

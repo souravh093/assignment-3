@@ -16,6 +16,7 @@ exports.UserServices = void 0;
 const http_status_1 = __importDefault(require("http-status"));
 const AppError_1 = __importDefault(require("../../errors/AppError"));
 const user_model_1 = require("./user.model");
+const QueryBuilder_1 = __importDefault(require("../../builder/QueryBuilder"));
 // get profile user
 const getUserProfileFromDB = (loggedUser) => __awaiter(void 0, void 0, void 0, function* () {
     // check user exist
@@ -23,8 +24,22 @@ const getUserProfileFromDB = (loggedUser) => __awaiter(void 0, void 0, void 0, f
     if (!user) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'User not found');
     }
-    const result = yield user_model_1.User.findById(loggedUser === null || loggedUser === void 0 ? void 0 : loggedUser.id);
+    const result = yield user_model_1.User.findById(user === null || user === void 0 ? void 0 : user._id);
     return result;
+});
+const getAllUsersFromDB = (query) => __awaiter(void 0, void 0, void 0, function* () {
+    const userQuery = new QueryBuilder_1.default(user_model_1.User.find(), query)
+        .search(['name'])
+        .filter()
+        .fields()
+        .paginate()
+        .sort();
+    const result = yield userQuery.modelQuery;
+    const meta = yield userQuery.countTotal();
+    return {
+        meta,
+        result,
+    };
 });
 // get profile user
 const updateUserIntoDB = (payload, loggedUser) => __awaiter(void 0, void 0, void 0, function* () {
@@ -33,12 +48,31 @@ const updateUserIntoDB = (payload, loggedUser) => __awaiter(void 0, void 0, void
     if (!user) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'User not found');
     }
-    const result = yield user_model_1.User.findOneAndUpdate({ _id: loggedUser === null || loggedUser === void 0 ? void 0 : loggedUser.id }, {
+    const result = yield user_model_1.User.findOneAndUpdate({ email: loggedUser === null || loggedUser === void 0 ? void 0 : loggedUser.email }, {
         $set: payload,
     }, { new: true });
+    return result;
+});
+const deleteUserFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const findUser = yield user_model_1.User.findById(id);
+    if (!findUser) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'User not found');
+    }
+    const result = yield user_model_1.User.findByIdAndDelete(id);
+    return result;
+});
+const updateRoleFromDB = (id, role) => __awaiter(void 0, void 0, void 0, function* () {
+    const findUser = yield user_model_1.User.findById(id);
+    if (!findUser) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'User not found');
+    }
+    const result = yield user_model_1.User.findByIdAndUpdate(id, { role });
     return result;
 });
 exports.UserServices = {
     getUserProfileFromDB,
     updateUserIntoDB,
+    getAllUsersFromDB,
+    deleteUserFromDB,
+    updateRoleFromDB,
 };

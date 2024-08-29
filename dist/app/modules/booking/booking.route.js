@@ -12,6 +12,9 @@ const booking_controller_1 = require("./booking.controller");
 const router = (0, express_1.Router)();
 // all booking routes
 router.post('/', (0, auth_1.default)('admin', 'user'), (0, validateRequest_1.default)(booking_validation_1.BookingValidations.createBookingValidationSchema), booking_controller_1.BookingController.createBooking);
+// all booking routes
+router.put('/pay/:id', (0, auth_1.default)('admin', 'user'), booking_controller_1.BookingController.updateBookingWithPayment);
 router.put('/:id/return', (0, auth_1.default)('admin'), (0, validateRequest_1.default)(booking_validation_1.BookingValidations.updateBookingValidationSchema), booking_controller_1.BookingController.updateBooking);
 router.get('/', (0, auth_1.default)('admin', 'user'), booking_controller_1.BookingController.getMyAllBookings);
+router.get('/initial-paid', (0, auth_1.default)('admin'), booking_controller_1.BookingController.getMyAllBookingsForAdmin);
 exports.BookingRoutes = router;

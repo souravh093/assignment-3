@@ -16,15 +16,33 @@ exports.BikeServices = void 0;
 const http_status_1 = __importDefault(require("http-status"));
 const AppError_1 = __importDefault(require("../../errors/AppError"));
 const bike_model_1 = require("./bike.model");
+const QueryBuilder_1 = __importDefault(require("../../builder/QueryBuilder"));
 // insert bike information data into database using mongoose
 const createBikeIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield bike_model_1.Bike.create(payload);
     return result;
 });
 // get all bikes form database
-const getAllBikesFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield bike_model_1.Bike.find();
-    return result;
+const getAllBikesFromDB = (query) => __awaiter(void 0, void 0, void 0, function* () {
+    const bikeQuery = new QueryBuilder_1.default(bike_model_1.Bike.find(), query)
+        .search(['name'])
+        .filter()
+        .sort()
+        .paginate()
+        .fields();
+    const result = yield bikeQuery.modelQuery;
+    const meta = yield bikeQuery.countTotal();
+    return {
+        meta,
+        result,
+    };
+});
+const getSingleBikeFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const findBike = yield bike_model_1.Bike.findById(id);
+    if (!findBike) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'Bike not found');
+    }
+    return findBike;
 });
 // update bike from database
 const updateBikeIntoDB = (payload, id) => __awaiter(void 0, void 0, void 0, function* () {
@@ -51,4 +69,5 @@ exports.BikeServices = {
     getAllBikesFromDB,
     updateBikeIntoDB,
     deleteBikeFromDB,
+    getSingleBikeFromDB,
 };

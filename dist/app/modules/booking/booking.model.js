@@ -30,5 +30,14 @@ const bookingSchema = new mongoose_1.Schema({
         type: Boolean,
         default: false,
     },
+    paidStatus: {
+        type: String,
+        enum: ['no-paid', 'initial-paid', 'full-paid'],
+        default: 'no-paid',
+    },
+    transactionId: {
+        type: String,
+        required: true,
+    },
 });
 exports.Booking = (0, mongoose_1.model)('Booking', bookingSchema);

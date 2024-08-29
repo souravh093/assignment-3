@@ -17,7 +17,6 @@ const http_status_1 = __importDefault(require("http-status"));
 const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
 const bike_service_1 = require("./bike.service");
-const noDataFound_1 = __importDefault(require("../../middlewares/noDataFound"));
 // create bike controller
 const createBike = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield bike_service_1.BikeServices.createBikeIntoDB(req.body);
@@ -30,16 +29,24 @@ const createBike = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
 }));
 // get all bikes controller
 const getAllBikes = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield bike_service_1.BikeServices.getAllBikesFromDB();
-    const isNoDataFounds = (0, noDataFound_1.default)(res, result);
-    if (!isNoDataFounds) {
-        (0, sendResponse_1.default)(res, {
-            success: true,
-            statusCode: http_status_1.default.OK,
-            message: 'Bikes retrieved successfully',
-            data: result,
-        });
-    }
+    const { meta, result } = yield bike_service_1.BikeServices.getAllBikesFromDB(req.query);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: 'Bikes retrieved successfully',
+        meta,
+        data: result,
+    });
+}));
+// update bike controller
+const singleBike = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield bike_service_1.BikeServices.getSingleBikeFromDB(req.params.id);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: 'Bike retrieved successfully',
+        data: result,
+    });
 }));
 // update bike controller
 const updateBike = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -66,4 +73,5 @@ exports.BikeController = {
     getAllBikes,
     updateBike,
     deleteBike,
+    singleBike,
 };

@@ -29,6 +29,7 @@ const signupUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
 });
 // login user service
 const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    // console.log(payload)
     // check user are exist
     const user = yield user_model_1.User.isUserExistsByEmail(payload.email);
     if (!user) {
@@ -39,18 +40,37 @@ const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     }
     const jwtPayload = {
         email: user.email,
-        role: user.role,
         id: user._id,
+        role: user.role,
     };
     // generate token
     const accessToken = (0, auth_utils_1.generateToken)(jwtPayload, config_1.default.jwt_access_secret, config_1.default.jwt_access_expires_in);
-    const token = `${accessToken}`;
+    const refreshToken = (0, auth_utils_1.generateToken)(jwtPayload, config_1.default.jwt_refresh_secret, config_1.default.jwt_refresh_expires_in);
     return {
-        token: token,
+        accessToken,
+        refreshToken,
         data: user,
+    };
+});
+const refreshToken = (token) => __awaiter(void 0, void 0, void 0, function* () {
+    const decoded = (0, auth_utils_1.verifyToken)(token, config_1.default.jwt_refresh_secret);
+    const { userEmail } = decoded;
+    const user = yield user_model_1.User.isUserExistsByEmail(userEmail);
+    if (!user) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'This user is not found!');
+    }
+    const jwtPayload = {
+        email: user.email,
+        id: user._id,
+        role: user.role,
+    };
+    const accessToken = (0, auth_utils_1.generateToken)(jwtPayload, config_1.default.jwt_access_secret, config_1.default.jwt_access_expires_in);
+    return {
+        accessToken,
     };
 });
 exports.AuthService = {
     signupUser,
     loginUser,
+    refreshToken,
 };

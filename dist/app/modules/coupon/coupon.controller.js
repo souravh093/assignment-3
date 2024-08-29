@@ -12,52 +12,50 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AuthController = void 0;
+exports.CouponController = void 0;
 const http_status_1 = __importDefault(require("http-status"));
 const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
-const auth_service_1 = require("./auth.service");
-const config_1 = __importDefault(require("../../config"));
-// create user controller
-const signupUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield auth_service_1.AuthService.signupUser(req.body);
-    (0, sendResponse_1.default)(res, {
-        success: true,
-        statusCode: http_status_1.default.CREATED,
-        message: 'User registered successfully',
-        data: result,
-    });
-}));
-// login user controller
-const loginUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield auth_service_1.AuthService.loginUser(req.body);
-    const { accessToken, refreshToken, data } = result;
-    res.cookie('refreshToken', refreshToken, {
-        secure: config_1.default.node_env === 'production',
-        httpOnly: true,
-        sameSite: true,
-        maxAge: 1000 * 60 * 60 * 24 * 365,
-    });
+const coupon_service_1 = require("./coupon.service");
+const createCoupon = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield coupon_service_1.CouponServices.createCouponIntoDB(req.body);
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.OK,
-        message: 'User logged in successfully',
-        token: accessToken,
-        data,
-    });
-}));
-const refreshToken = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { refreshToken } = req.cookies;
-    const result = yield auth_service_1.AuthService.refreshToken(refreshToken);
-    (0, sendResponse_1.default)(res, {
-        statusCode: http_status_1.default.OK,
-        success: true,
-        message: 'Access token is retrieved successfully!',
+        message: 'Coupon created successfully',
         data: result,
     });
 }));
-exports.AuthController = {
-    signupUser,
-    loginUser,
-    refreshToken,
+const getAllCoupon = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield coupon_service_1.CouponServices.getAllCouponsFromDB();
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: 'Coupon fetched successfully',
+        data: result,
+    });
+}));
+const updateCoupon = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield coupon_service_1.CouponServices.updateCouponFromDB(req.body, req.params.id);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: 'Coupon update successfully',
+        data: result,
+    });
+}));
+const deleteCoupon = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield coupon_service_1.CouponServices.deleteCouponFromDB(req.params.id);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: 'Coupon delete successfully',
+        data: result,
+    });
+}));
+exports.CouponController = {
+    createCoupon,
+    getAllCoupon,
+    updateCoupon,
+    deleteCoupon,
 };

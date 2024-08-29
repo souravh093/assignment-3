@@ -23,6 +23,10 @@ const bikeSchema = new mongoose_1.Schema({
         type: Number,
         required: true,
     },
+    image: {
+        type: String,
+        required: true,
+    },
     year: {
         type: Number,
         required: true,

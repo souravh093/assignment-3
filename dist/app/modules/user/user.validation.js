@@ -38,8 +38,22 @@ const loginUserValidationSchema = zod_1.z.object({
         password: zod_1.z.string({ required_error: 'Password is Required' }),
     }),
 });
+const refreshTokenValidationSchema = zod_1.z.object({
+    cookies: zod_1.z.object({
+        refreshToken: zod_1.z.string({
+            required_error: 'Refresh token is required!',
+        }),
+    }),
+});
+const updateRoleValidationSchema = zod_1.z.object({
+    body: zod_1.z.object({
+        role: zod_1.z.string({ required_error: 'Role is Required' }),
+    }),
+});
 exports.UserValidation = {
     createUserValidationSchema,
     updateUserValidationSchema,
     loginUserValidationSchema,
+    refreshTokenValidationSchema,
+    updateRoleValidationSchema
 };

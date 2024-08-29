@@ -27,6 +27,16 @@ const getUserProfile = (0, catchAsync_1.default)((req, res) => __awaiter(void 0,
         data: result,
     });
 }));
+const getAllUsers = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { result, meta } = yield user_service_1.UserServices.getAllUsersFromDB(req.query);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: 'Retrieved All users successfully',
+        meta,
+        data: result,
+    });
+}));
 // update user controller
 const updateUserProfile = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield user_service_1.UserServices.updateUserIntoDB(req.body, req.user);
@@ -37,7 +47,31 @@ const updateUserProfile = (0, catchAsync_1.default)((req, res) => __awaiter(void
         data: result,
     });
 }));
+const deleteUsers = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    yield user_service_1.UserServices.deleteUserFromDB(id);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: 'Users deleted successfully',
+        data: null,
+    });
+}));
+const updateRole = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const { role } = req.body;
+    const result = yield user_service_1.UserServices.updateRoleFromDB(id, role);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: 'Users role update successfully',
+        data: result,
+    });
+}));
 exports.UserController = {
     getUserProfile,
     updateUserProfile,
+    getAllUsers,
+    deleteUsers,
+    updateRole,
 };

@@ -2,11 +2,9 @@ import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { BikeServices } from './bike.service';
-import noDataFound from '../../middlewares/noDataFound';
 
 // create bike controller
 const createBike = catchAsync(async (req, res) => {
-  
   const result = await BikeServices.createBikeIntoDB(req.body);
 
   sendResponse(res, {
@@ -19,19 +17,15 @@ const createBike = catchAsync(async (req, res) => {
 
 // get all bikes controller
 const getAllBikes = catchAsync(async (req, res) => {
-  const {meta, result} = await BikeServices.getAllBikesFromDB(req.query);
+  const { meta, result } = await BikeServices.getAllBikesFromDB(req.query);
 
-  const isNoDataFounds = noDataFound(res, result);
-
-  if (!isNoDataFounds) {
-    sendResponse(res, {
-      success: true,
-      statusCode: httpStatus.OK,
-      message: 'Bikes retrieved successfully',
-      meta,
-      data: result,
-    });
-  }
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Bikes retrieved successfully',
+    meta,
+    data: result,
+  });
 });
 
 // update bike controller
