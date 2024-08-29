@@ -29,5 +29,6 @@ router.put(
 );
 
 router.get('/', auth('admin', 'user'), BookingController.getMyAllBookings);
+router.get('/initial-paid', auth('admin'), BookingController.getMyAllBookingsForAdmin);
 
 export const BookingRoutes = router;

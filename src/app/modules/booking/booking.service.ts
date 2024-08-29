@@ -33,6 +33,7 @@ const createBookingIntoDB = async (
     customerEmail: user?.email,
     customerPhone: user?.phone,
     customerAddress: user?.address,
+    paidStatus: 'initial-paid',
   };
 
   const paymentSession = await initiatePayment(paymentInfo);
@@ -53,7 +54,7 @@ const updateBookingWithPayment = async (
   amount: string,
 ) => {
   const findBookedBike = await Booking.findById(id);
-  
+
   if (!findBookedBike) {
     throw new AppError(httpStatus.NOT_FOUND, 'Rentals not found');
   }
@@ -68,7 +69,7 @@ const updateBookingWithPayment = async (
     customerEmail: user?.email,
     customerPhone: user?.phone,
     customerAddress: user?.address,
-    paidStatus: "full-paid",
+    paidStatus: 'full-paid',
   };
 
   const paymentSession = await initiatePayment(paymentInfo);
@@ -82,7 +83,6 @@ const updateBookingWithPayment = async (
     paidStatus: bookingWithPayment.paidStatus,
     transactionId: bookingWithPayment.transactionId,
   });
-
 
   return { result, paymentSession };
 };
@@ -156,9 +156,16 @@ const getMyAllBookingsIntoDB = async (
   return result;
 };
 
+const getMyAllBookingsForAdminIntoDB = async () => {
+  const result = await Booking.find().populate('bikeId');
+
+  return result;
+};
+
 export const BookingServices = {
   createBookingIntoDB,
   updateBookingIntoDB,
   getMyAllBookingsIntoDB,
   updateBookingWithPayment,
+  getMyAllBookingsForAdminIntoDB,
 };

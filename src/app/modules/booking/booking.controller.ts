@@ -37,6 +37,7 @@ const updateBookingWithPayment = catchAsync(async (req, res) => {
     paymentSession,
   });
 });
+
 // update booking or return bike controller
 const updateBooking = catchAsync(async (req, res) => {
   const result = await BookingServices.updateBookingIntoDB(req.params.id);
@@ -68,9 +69,21 @@ const getMyAllBookings = catchAsync(async (req, res) => {
   }
 });
 
+const getMyAllBookingsForAdmin = catchAsync(async (req, res) => {
+  const result = await BookingServices.getMyAllBookingsForAdminIntoDB();
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Rentals retrieved successfully',
+    data: result,
+  });
+});
+
 export const BookingController = {
   createBooking,
   updateBooking,
   getMyAllBookings,
   updateBookingWithPayment,
+  getMyAllBookingsForAdmin,
 };

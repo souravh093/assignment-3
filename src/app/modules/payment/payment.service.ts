@@ -8,12 +8,18 @@ const confirmationService = async (
 ) => {
   const verifyResponse = await verifyPayment(transactionId);
 
-  if (verifyResponse && verifyResponse?.pay_status === 'Successfully') {
+  if (verifyResponse && verifyResponse?.pay_status === 'Successful') {
     await Booking.findOneAndUpdate(
       { transactionId },
       {
-        paidStatus: paidStatus === 'full-paid' ? 'full-paid' : 'initial-paid',
+        paidStatus:
+          paidStatus === 'full-paid'
+            ? 'full-paid'
+            : paidStatus === 'initial-paid'
+              ? 'initial-paid'
+              : 'no-paid',
       },
+      { new: true },
     );
   }
 
