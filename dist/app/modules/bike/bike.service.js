@@ -19,6 +19,7 @@ const bike_model_1 = require("./bike.model");
 const QueryBuilder_1 = __importDefault(require("../../builder/QueryBuilder"));
 // insert bike information data into database using mongoose
 const createBikeIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(payload);
     const result = yield bike_model_1.Bike.create(payload);
     return result;
 });

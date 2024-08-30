@@ -6,6 +6,7 @@ import QueryBuilder from '../../builder/QueryBuilder';
 
 // insert bike information data into database using mongoose
 const createBikeIntoDB = async (payload: TBike) => {
+  console.log(payload);
   const result = await Bike.create(payload);
 
   return result;
