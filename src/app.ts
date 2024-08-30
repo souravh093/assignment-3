@@ -10,7 +10,15 @@ const app: Application = express();
 // parsers
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ credentials: true }));
+app.use(
+  cors({
+    origin: [
+      'https://bike-rental-client-zeta.vercel.app',
+      'https://api.imgbb.com/1/upload',
+    ],
+    credentials: true,
+  }),
+);
 
 // app routes
 app.use('/api', router);
