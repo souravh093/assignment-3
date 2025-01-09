@@ -7,6 +7,7 @@ const auth_route_1 = require("../modules/auth/auth.route");
 const booking_route_1 = require("../modules/booking/booking.route");
 const payment_route_1 = require("../modules/payment/payment.route");
 const coupon_route_1 = require("../modules/coupon/coupon.route");
+const copy_route_1 = require("../modules/copyCoupon/copy.route");
 const router = (0, express_1.Router)();
 // parent route assign
 const moduleRoutes = [
@@ -33,6 +34,10 @@ const moduleRoutes = [
     {
         path: '/coupons',
         route: coupon_route_1.CouponRoutes,
+    },
+    {
+        path: '/copy-coupon',
+        route: copy_route_1.CopyCouponRoute,
     },
 ];
 moduleRoutes.forEach((route) => router.use(route.path, route.route));

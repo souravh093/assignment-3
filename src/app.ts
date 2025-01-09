@@ -15,6 +15,7 @@ app.use(
     origin: [
       'https://bike-rental-client-zeta.vercel.app',
       'http://localhost:5173',
+      'https://api.imgbb.com/1/upload',
     ],
     credentials: true,
   }),

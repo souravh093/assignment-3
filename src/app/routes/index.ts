@@ -5,6 +5,7 @@ import { AuthRoutes } from '../modules/auth/auth.route';
 import { BookingRoutes } from '../modules/booking/booking.route';
 import { paymentRoutes } from '../modules/payment/payment.route';
 import { CouponRoutes } from '../modules/coupon/coupon.route';
+import { CopyCouponRoute } from '../modules/copyCoupon/copy.route';
 
 const router = Router();
 
@@ -33,6 +34,10 @@ const moduleRoutes = [
   {
     path: '/coupons',
     route: CouponRoutes,
+  },
+  {
+    path: '/copy-coupon',
+    route: CopyCouponRoute,
   },
 ];
 

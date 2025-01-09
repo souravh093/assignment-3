@@ -9,7 +9,7 @@ const createBikeValidation = zod_1.z.object({
         description: zod_1.z.string({ required_error: 'Description is Required' }),
         pricePerHour: zod_1.z.number({ required_error: 'Price per hour is Required' }),
         isAvailable: zod_1.z.boolean().optional(),
-        image: zod_1.z.string({ required_error: 'Image is required' }).url(),
+        image: zod_1.z.string({ required_error: 'Image is required' }),
         cc: zod_1.z.number({ required_error: 'CC is Required' }),
         year: zod_1.z.number({ required_error: 'Year is Required' }),
         model: zod_1.z.string({ required_error: 'Model is Required' }),
