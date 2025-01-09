@@ -10,7 +10,15 @@ const app: Application = express();
 // parsers
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: ['https://bike-rental-client-zeta.vercel.app'], credentials: true }));
+app.use(
+  cors({
+    origin: [
+      'https://bike-rental-client-zeta.vercel.app',
+      'http://localhost:5173',
+    ],
+    credentials: true,
+  }),
+);
 
 // app routes
 app.use('/api', router);
